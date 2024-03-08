@@ -1,7 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.Animations.Rigging;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class GameState
@@ -28,7 +32,14 @@ public class GameSystem : StateMachine
     public  Play        playState;
     public  EndPlay     endPlayState;
 
-    public Canvas       canvas;
+    // UI
+    public GameObject   flyButton;
+    public GameObject   cornerButton;
+    public GameObject   comebackButton;
+    public GameObject   resetButton;
+
+    public bool         playHasStarted = false;
+    public bool         playHasEnded   = false;
 
     // Prefabs
     public  GameObject  ballPrefab;
@@ -46,10 +57,13 @@ public class GameSystem : StateMachine
     [SerializeField]
     private Collider                        _landingCollider;
     //[SerializeField, Range(10, 100)]
-    private int                             _maxLinePoints          = 100;
+    private int                             _maxLinePoints          = 200;
     //[SerializeField, Range(0.01f, 0.5f)]    
     private float                           _lineIncrement          = 0.025f;
     private float                           _rayOverlap             = 1.1f;
+
+    [SerializeField]
+    private NavMeshAgent                    _navMeshAgent;
 
     // Route transformation points
     [SerializeField]
@@ -63,8 +77,9 @@ public class GameSystem : StateMachine
     [SerializeField]
     private int         _currentPointIndex = 0;
 
-    // Audio Collections
-    //public AudioCollection winLoseSounds = null;
+    [SerializeField]
+    private LineRenderer _routeLineRenderer;
+
 
     // Properties
     public Rigidbody    BallRigidbody       { get { return _ballRigidbody; } }
@@ -79,6 +94,7 @@ public class GameSystem : StateMachine
     public float        RayOverlap          { get { return _rayOverlap; } }
     public Transform[]  CurrentRoutePoints  { get { return _currentRoutePoints; } }
     public int          CurrentPointIndex   { get { return _currentPointIndex; } set { _currentPointIndex = value; } }
+    public LineRenderer RouteLineRenderer   { get { return _routeLineRenderer; } set { _routeLineRenderer = value; } }
 
     private void Awake()
     {
@@ -110,6 +126,21 @@ public class GameSystem : StateMachine
 
         _throwTrajectoryLine = GetComponent<LineRenderer>();
         _ballRigidbody = ballPrefab.GetComponent<Rigidbody>();
+
+        _currentRoutePoints = _flyRoutePoints;
+
+        // Set route path line
+        _routeLineRenderer.positionCount = _currentRoutePoints.Length + 1; // Add 1 for the origin point
+
+        Vector3 offset = Vector3.up * 0.5f;
+
+        // Origin point
+        _routeLineRenderer.SetPosition(0, _navMeshAgent.transform.position + offset);
+
+        for (int i = 0; i < _currentRoutePoints.Length; i++)
+        {
+            _routeLineRenderer.SetPosition(i + 1, _currentRoutePoints[i].position + offset); // Offset by 1 to skip the origin point
+        }
     }
 
     private void Start()
@@ -136,7 +167,6 @@ public class GameSystem : StateMachine
     {
         if (State != null)
             State.OnUpdate();
-
     }
 
     private void FixedUpdate()
@@ -163,6 +193,45 @@ public class GameSystem : StateMachine
                 _currentRoutePoints = _flyRoutePoints;
                 break;
         }
+
+        // Set route path line
+        _routeLineRenderer.positionCount = _currentRoutePoints.Length + 1; // Add 1 for the origin point
+
+        Vector3 offset = Vector3.up * 0.5f;
+
+        // Origin point
+        _routeLineRenderer.SetPosition(0, _navMeshAgent.transform.position + offset);
+
+        for (int i = 0; i < _currentRoutePoints.Length; i++)
+        {
+            _routeLineRenderer.SetPosition(i + 1, _currentRoutePoints[i].position + offset); // Offset by 1 to skip the origin point
+        }
+    }
+
+    public void SetDestination(Vector3 targetVector)
+    {
+        if (_currentRoutePoints[0].position != null)
+        {
+            _navMeshAgent.SetDestination(targetVector);
+        }
+    }
+
+    public void ResetGameSystem()
+    {
+        playHasStarted = false;
+        playHasEnded = false;
+        _throwPointRotation = 0.07f;
+        _throwForce = 10;
+        
+        _currentPointIndex = 0;
+        System.Array.Clear(_currentRoutePoints, 0, 0);
+
+        var ball = GameObject.FindWithTag("ball");
+
+        Destroy(ball);
+
+        SetState(startGameState);
     }
 
 }
+

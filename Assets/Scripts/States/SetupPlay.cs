@@ -4,20 +4,24 @@ using UnityEngine;
 
 public class SetupPlay : State
 {
+    private bool _ballThrown = false;
+
     public SetupPlay(GameSystem gameSystem) : base(gameSystem)
     {
     }
 
     public override IEnumerator OnEnter()
     {
-        // Turn on routes UI
-
+        
 
         yield break;
     }
 
     public override void OnUpdate()
     {
+        if (_ballThrown)
+            return;
+
         // Allow player to choose route and position the throw
 
         #region Player Input 
@@ -63,26 +67,35 @@ public class SetupPlay : State
         // Start Play
         if (Input.GetKey(KeyCode.Return))
         {
-            GameSystem.canvas.gameObject.SetActive(false);
+            //GameSystem.canvas.gameObject.SetActive(false);
+            GameSystem.flyButton.SetActive(false);
+            GameSystem.cornerButton.SetActive(false);
+            GameSystem.comebackButton.SetActive(false);
+
+            GameSystem.playHasStarted = true;
+           
             // Start Receiver AI 
+            GameSystem.SetDestination(GameSystem.CurrentRoutePoints[0].position);
         }
 
         // Throw ball
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && GameSystem.playHasStarted)
         {
             var spawned = GameSystem.SpawnPrefab(GameSystem.ballPrefab, GameSystem.ThrowPoint.position);
 
             spawned.GetComponent<Rigidbody>().AddForce(GameSystem.ThrowPoint.forward * GameSystem.ThrowForce, ForceMode.Impulse);
+            
+            _ballThrown = true;
         }
 
-        PredictTrajectory(GameSystem.ThrowPoint);
-
         #endregion
+
+        PredictTrajectory(GameSystem.ThrowPoint);
     }
 
     public override IEnumerator OnExit()
     {
-        // Turn off routes UI 
+        _ballThrown = false;
 
         yield break;
     }

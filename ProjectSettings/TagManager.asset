@@ -6,6 +6,9 @@ TagManager:
   tags:
   - ball
   - field
+  - fieldAwareness
+  - gameSystem
+  - ballDestination
   layers:
   - Default
   - TransparentFX

@@ -8,15 +8,16 @@ public class EndPlay : State
     {
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public override IEnumerator OnEnter()
     {
-        
-    }
+        // Turn on UI
+        //GameSystem.canvas.gameObject.SetActive(true);
+        //GameSystem.flyButton.SetActive(true);
+        //GameSystem.cornerButton.SetActive(true);
+        //GameSystem.comebackButton.SetActive(true);
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        GameSystem.resetButton.SetActive(true);
+
+        yield break;
     }
 }

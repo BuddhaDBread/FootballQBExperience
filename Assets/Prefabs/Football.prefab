@@ -75,6 +75,7 @@ GameObject:
   - component: {fileID: 8044362722369859642}
   - component: {fileID: -7868453713584847002}
   - component: {fileID: -9100908115338553400}
+  - component: {fileID: 5788446891864173318}
   m_Layer: 0
   m_Name: Football
   m_TagString: ball
@@ -180,3 +181,15 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4711208715938537054, guid: 07333fa270db4a043825037c9a1ea867, type: 3}
+--- !u!114 &5788446891864173318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8404751778545947119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0a9f910bc1986649a6bf2ddb70dcae8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

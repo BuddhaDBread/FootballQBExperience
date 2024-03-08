@@ -11,7 +11,14 @@ public class StartGame : State
     public override IEnumerator OnEnter()
     {
         // Turn on UI
-        GameSystem.canvas.gameObject.SetActive(true);
+        //GameSystem.canvas.gameObject.SetActive(true);
+        GameSystem.flyButton.SetActive(true);
+        GameSystem.cornerButton.SetActive(true);
+        GameSystem.comebackButton.SetActive(true);
+
+        GameSystem.resetButton.SetActive(false);
+
+        GameSystem.playHasStarted = false;
 
         // Change state to player turn state
         GameSystem.SetState(GameSystem.setupPlayState);
