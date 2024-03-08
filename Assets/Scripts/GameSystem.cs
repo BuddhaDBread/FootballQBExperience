@@ -48,7 +48,7 @@ public class GameSystem : StateMachine
     private Rigidbody                       _ballRigidbody;
     [SerializeField]
     private Transform                       _throwPoint;
-    private float                           _throwPointRotation     = 0.07f;
+    private float                           _throwPointRotation     = 0.2f;
     [SerializeField]
     private float                           _throwForce             = 10;
 
@@ -220,9 +220,12 @@ public class GameSystem : StateMachine
     {
         playHasStarted = false;
         playHasEnded = false;
-        _throwPointRotation = 0.07f;
-        _throwForce = 10;
-        
+        //_throwPointRotation = 0.2f;
+        //_throwForce = 10;
+
+        _navMeshAgent.isStopped = true;
+        _navMeshAgent.ResetPath();
+
         _currentPointIndex = 0;
         System.Array.Clear(_currentRoutePoints, 0, 0);
 
@@ -231,6 +234,11 @@ public class GameSystem : StateMachine
         Destroy(ball);
 
         SetState(startGameState);
+    }
+
+    public void QuitDemo()
+    {
+        Application.Quit();
     }
 
 }

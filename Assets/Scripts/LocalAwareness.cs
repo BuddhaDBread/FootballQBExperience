@@ -7,7 +7,7 @@ public class LocalAwareness : MonoBehaviour
 {
     [SerializeField]
     private Transform   _fovPivot;
-    private float       _fov            = 90f;
+    private float       _fov            = 270f;
     private bool        _ballInRange    = false;
     private Collider    _ballCollider   = null;
 

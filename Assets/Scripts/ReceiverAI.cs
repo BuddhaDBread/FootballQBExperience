@@ -112,7 +112,9 @@ public class ReceiverAI : MonoBehaviour
                 _ikConstraintLeft.data.target = _localAwareness.BallCollider.transform.GetChild(1).transform;
 
                 if (_rig.weight < 1)
-                    _rig.weight += 0.04f;
+                    _rig.weight += 0.2f;
+
+                Debug.Log("here");
 
                 _rigBuilder.Build();
             }
@@ -145,14 +147,14 @@ public class ReceiverAI : MonoBehaviour
                 {
                     gameSystem.SetDestination(_fieldAwareness.BallDestination);
 
-                    if (_fieldAwareness.BallPos.magnitude > 0)
-                    {
-                        Vector3 targetDirection = _fieldAwareness.BallPos - transform.position;
-                        targetDirection.y = 0;
+                    //if (_fieldAwareness.BallPos.magnitude > 0)
+                    //{
+                    //    Vector3 targetDirection = _fieldAwareness.BallPos - transform.position;
+                    //    targetDirection.y = 0;
 
-                        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-                        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * _navMeshAgent.angularSpeed);
-                    }
+                    //    Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+                    //    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * _navMeshAgent.angularSpeed);
+                    //}
                 }
 
                 _isRunning = false;
@@ -218,6 +220,11 @@ public class ReceiverAI : MonoBehaviour
         transform.rotation = Quaternion.identity;
         _ikConstraintRight.data.target = null;
         _ikConstraintLeft.data.target = null;
+        _holdBallRight.BallCaught = false;
+        _holdBallLeft.BallCaught = false;
+        _fieldAwareness.DestinationInRange = false;
+        _navMeshAgent.isStopped = true;
+        _navMeshAgent.ResetPath();
 
         _rig.weight = 0;
         _rigBuilder.Build();

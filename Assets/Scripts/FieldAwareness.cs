@@ -14,7 +14,7 @@ public class FieldAwareness : MonoBehaviour
     // Properties
     public Vector3  BallDestination     { get { return _ballDestinationPos; } }
     public Vector3  BallPos             { get { return _ballPos; } }
-    public bool     DestinationInRange  { get { return _destinationInRange; } }
+    public bool     DestinationInRange  { get { return _destinationInRange; } set { _destinationInRange = value; } }
     public bool     BallInAir           { get { return _ballInAir; } set { _ballInAir = value; } }
 
     private void OnTriggerStay(Collider other)

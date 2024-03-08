@@ -51,4 +51,9 @@ public class Ball : MonoBehaviour
         _gameSystem.playHasEnded = true;
 
     }
+
+    private void OnDestroy()
+    {
+        _fieldAwareness.BallInAir = false;
+    }
 }
